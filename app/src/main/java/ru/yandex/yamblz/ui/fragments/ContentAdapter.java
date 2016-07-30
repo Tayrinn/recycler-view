@@ -18,7 +18,7 @@ import ru.yandex.yamblz.ui.adapters.OnItemDragListener;
 public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> implements OnItemDragListener {
 
     private final Random rnd = new Random();
-    private final List<Integer> colors = new ArrayList<>();
+    private List<Integer> colors = new ArrayList<>();
 
     @Override
     public ContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -37,7 +37,8 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
 
     private Integer createColorForPosition(int position) {
         if (position >= colors.size()) {
-            colors.add(Color.rgb(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
+            for ( int i = colors.size(); i <= position; ++i )
+                colors.add(Color.rgb(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
         }
         return colors.get(position);
     }
@@ -52,11 +53,13 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
     public void onItemMove(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(colors, i, i + 1);
+                if ( i >= 0 )
+                    Collections.swap(colors, i, i + 1);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(colors, i, i - 1);
+                if ( i >= -1 )
+                    Collections.swap(colors, i, i - 1);
             }
         }
         notifyItemMoved(fromPosition, toPosition);

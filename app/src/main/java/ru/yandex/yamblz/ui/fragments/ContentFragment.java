@@ -12,9 +12,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LayoutAnimationController;
 
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
+import ru.yandex.yamblz.ui.adapters.FrameItemDecoration;
 import ru.yandex.yamblz.ui.adapters.TouchHelperCallback;
 
 public class ContentFragment extends BaseFragment {
@@ -34,13 +36,15 @@ public class ContentFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        glm = new GridLayoutManager(getContext(), 2);
+        glm = new GridLayoutManager(getContext(), 4);
         rv.setLayoutManager(glm);
         ContentAdapter adapter = new ContentAdapter();
+        adapter.setHasStableIds(true);
         ItemTouchHelper.Callback touchCallback = new TouchHelperCallback( adapter );
         ItemTouchHelper touchHelper = new ItemTouchHelper( touchCallback );
         touchHelper.attachToRecyclerView( rv );
         rv.setAdapter(adapter);
+        rv.addItemDecoration(new FrameItemDecoration());
     }
 
     @Override
@@ -56,7 +60,7 @@ public class ContentFragment extends BaseFragment {
                 glm.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize( int position ) {
-                        return 1;
+                        return 4;
                     }
                 } );
                 break;
@@ -68,8 +72,17 @@ public class ContentFragment extends BaseFragment {
                     }
                 } );
                 break;
+            case R.id.menu4:
+                glm.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize( int position ) {
+                        return 1;
+                    }
+                } );
+                break;
         }
-        rv.invalidateItemDecorations();
+        int firstVisible = glm.findFirstVisibleItemPosition();
+        rv.getAdapter().notifyItemRangeChanged(firstVisible, 0);
         return super.onOptionsItemSelected( item );
     }
 }
