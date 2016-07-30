@@ -51,7 +51,7 @@ public class FrameItemDecoration extends RecyclerView.ItemDecoration {
         int firstItemDecorationPosition = ((ContentAdapter) parent.getAdapter()).movedFromItemPosition;
         int secondItemDecorationPosition = ((ContentAdapter) parent.getAdapter()).movedToItemPosition;
 
-        for( int i = 0; i < state.getItemCount(); i++ ){
+        for( int i = 0; i < parent.getChildCount(); i++ ){
             final View child = parent.getChildAt(i);
             int childPosition = parent.getChildAdapterPosition(child);
             if ( childPosition % 3 == 0 ) {
