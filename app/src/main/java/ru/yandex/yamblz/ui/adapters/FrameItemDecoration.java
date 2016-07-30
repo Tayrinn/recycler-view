@@ -4,6 +4,7 @@ package ru.yandex.yamblz.ui.adapters;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.yandex.yamblz.R;
+import ru.yandex.yamblz.ui.fragments.ContentAdapter;
 
 /**
  * Created by Volha on 30.07.2016.
@@ -46,19 +48,26 @@ public class FrameItemDecoration extends RecyclerView.ItemDecoration {
     public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
         super.onDrawOver(c, parent, state);
         final RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
+        int firstItemDecorationPosition = ((ContentAdapter) parent.getAdapter()).movedFromItemPosition;
+        int secondItemDecorationPosition = ((ContentAdapter) parent.getAdapter()).movedToItemPosition;
 
         for( int i = 0; i < parent.getChildCount(); i++ ){
             final View child = parent.getChildAt(i);
-            if ( parent.getChildAdapterPosition(child) % 3 == 0 ) {
+            int childPosition = parent.getChildAdapterPosition(child);
+            if ( childPosition % 3 == 0 ) {
                 drawRect(c, layoutManager, child);
-            } else if ( parent.getChildAdapterPosition(child) % 3 == 1 ) {
+            } else if ( childPosition % 3 == 1 ) {
                 drawOval(c, layoutManager, child);
             }
+            if ( firstItemDecorationPosition > 0 &&
+                    (childPosition == firstItemDecorationPosition || childPosition == secondItemDecorationPosition) )
+                drawChest(c, layoutManager, child);
         }
     }
 
     private void drawOval(Canvas c, RecyclerView.LayoutManager layoutManager, View child) {
-        RectF rect = new RectF(layoutManager.getDecoratedLeft(child) + offset,
+        RectF rect = new RectF();
+        rect.set(layoutManager.getDecoratedLeft(child) + offset,
                 layoutManager.getDecoratedTop(child) + offset,
                 layoutManager.getDecoratedRight(child) - offset,
                 layoutManager.getDecoratedBottom(child) - offset);
@@ -74,5 +83,20 @@ public class FrameItemDecoration extends RecyclerView.ItemDecoration {
                 paintRed);
     }
 
-
+    private void drawChest(Canvas c, RecyclerView.LayoutManager layoutManager, View child) {
+        Path path = new Path();
+        path.moveTo(
+                layoutManager.getDecoratedLeft(child) + offset,
+                layoutManager.getDecoratedTop(child) + offset);
+        path.lineTo(
+                layoutManager.getDecoratedRight(child) - offset,
+                layoutManager.getDecoratedBottom(child) - offset);
+        path.moveTo(
+                layoutManager.getDecoratedLeft(child) + offset,
+                layoutManager.getDecoratedBottom(child) - offset);
+        path.lineTo(
+                layoutManager.getDecoratedRight(child) - offset,
+                layoutManager.getDecoratedTop(child) + offset);
+        c.drawPath(path, paintRed);
+    }
 }
