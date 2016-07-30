@@ -25,6 +25,7 @@ public class ContentFragment extends BaseFragment {
     RecyclerView rv;
 
     GridLayoutManager glm;
+    int spanSize = 12;
 
     @NonNull
     @Override
@@ -36,15 +37,22 @@ public class ContentFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        glm = new GridLayoutManager(getContext(), 4);
+        glm = new GridLayoutManager(getContext(), 12);
+        glm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return spanSize;
+            }
+        });
         rv.setLayoutManager(glm);
         ContentAdapter adapter = new ContentAdapter();
         adapter.setHasStableIds(true);
         ItemTouchHelper.Callback touchCallback = new TouchHelperCallback( adapter );
         ItemTouchHelper touchHelper = new ItemTouchHelper( touchCallback );
+        FrameItemDecoration itemDecoration = new FrameItemDecoration();
         touchHelper.attachToRecyclerView( rv );
         rv.setAdapter(adapter);
-        rv.addItemDecoration(new FrameItemDecoration());
+        rv.addItemDecoration(itemDecoration);
     }
 
     @Override
@@ -57,28 +65,16 @@ public class ContentFragment extends BaseFragment {
     public boolean onOptionsItemSelected( MenuItem item ) {
         switch ( item.getItemId() ) {
             case R.id.menu1:
-                glm.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {
-                    @Override
-                    public int getSpanSize( int position ) {
-                        return 4;
-                    }
-                } );
+                spanSize = 12;
                 break;
             case R.id.menu2:
-                glm.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {
-                    @Override
-                    public int getSpanSize( int position ) {
-                        return 2;
-                    }
-                } );
+                spanSize = 6;
+                break;
+            case R.id.menu3:
+                spanSize = 4;
                 break;
             case R.id.menu4:
-                glm.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup() {
-                    @Override
-                    public int getSpanSize( int position ) {
-                        return 1;
-                    }
-                } );
+                spanSize = 3;
                 break;
         }
         int firstVisible = glm.findFirstVisibleItemPosition();

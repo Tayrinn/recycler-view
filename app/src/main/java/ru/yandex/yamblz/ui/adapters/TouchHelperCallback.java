@@ -1,5 +1,6 @@
 package ru.yandex.yamblz.ui.adapters;
 
+import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
@@ -43,6 +44,7 @@ public class TouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped( RecyclerView.ViewHolder viewHolder, int direction) {
         mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+
     }
 
 }

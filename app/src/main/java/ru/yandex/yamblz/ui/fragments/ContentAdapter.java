@@ -19,10 +19,18 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
 
     private final Random rnd = new Random();
     private List<Integer> colors = new ArrayList<>();
+    public int movedFromItemPosition = -1;
+    public int movedToItemPosition = -1;
 
     @Override
     public ContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ContentHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.content_item, parent, false));
+        final ContentHolder holder = new ContentHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.content_item, parent, false));
+        holder.itemView.setOnClickListener(v -> {
+            int itemPosition = holder.getAdapterPosition();
+            colors.set(itemPosition, Color.rgb(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
+            notifyItemChanged(itemPosition);
+        });
+        return holder;
     }
 
     @Override
@@ -62,6 +70,8 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
                     Collections.swap(colors, i, i - 1);
             }
         }
+        movedFromItemPosition = fromPosition;
+        movedToItemPosition = toPosition;
         notifyItemMoved(fromPosition, toPosition);
     }
 
@@ -73,6 +83,7 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
         void bind(Integer color) {
             itemView.setBackgroundColor(color);
             ((TextView) itemView).setText("#".concat(Integer.toHexString(color).substring(2)));
+
         }
     }
 }
