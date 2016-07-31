@@ -1,9 +1,21 @@
 package ru.yandex.yamblz.ui.adapters;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import ru.yandex.yamblz.ui.fragments.ContentAdapter;
 
@@ -11,43 +23,80 @@ import ru.yandex.yamblz.ui.fragments.ContentAdapter;
  * Created by Volha on 31.07.2016.
  */
 
-public class ListItemAnimator extends RecyclerView.ItemAnimator {
+public class ListItemAnimator extends SimpleItemAnimator {
+
+    private final int HALF_ANIMATION_DURATION = 500;
     @Override
-    public boolean animateDisappearance(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull ItemHolderInfo preLayoutInfo, @Nullable ItemHolderInfo postLayoutInfo) {
+    public boolean animateRemove(RecyclerView.ViewHolder holder) {
         return false;
     }
 
     @Override
-    public boolean animateAppearance(@NonNull RecyclerView.ViewHolder viewHolder, @Nullable ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
-
+    public boolean animateAdd(RecyclerView.ViewHolder holder) {
         return false;
     }
 
     @Override
-    public boolean animatePersistence(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
-//        viewHolder.itemView.setAlpha(0);
-//        viewHolder.itemView.animate()
-//                    .alpha(1f)
-//                    .rotationX(360f)
-//                    .setDuration(300)
-//                    .setListener(null);
+    public boolean animateMove(RecyclerView.ViewHolder holder, int fromX, int fromY, int toX, int toY) {
         return false;
     }
 
     @Override
-    public boolean animateChange(@NonNull RecyclerView.ViewHolder oldHolder, @NonNull RecyclerView.ViewHolder newHolder, @NonNull ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
-        oldHolder.itemView.clearAnimation();
-        newHolder.itemView.clearAnimation();
-        oldHolder.itemView.animate().alpha(0f).setDuration(500).setListener(null);
-        newHolder.itemView.setAlpha(0f);
-        newHolder.itemView.animate().alpha(1f).setStartDelay(500).setDuration(500).setListener(null);
+    public boolean animateChange(RecyclerView.ViewHolder oldHolder, RecyclerView.ViewHolder newHolder, int fromLeft, int fromTop, int toLeft, int toTop) {
+        ObjectAnimator oldObjectAnimator = ObjectAnimator.ofFloat(oldHolder.itemView, View.ALPHA, 1, 0f);
+        oldObjectAnimator.setDuration(HALF_ANIMATION_DURATION);
+        oldObjectAnimator.addListener(new AnimatorListenerAdapter() {
 
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                oldHolder.itemView.setAlpha(1f);
+                newHolder.itemView.setAlpha(0f);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                dispatchAnimationFinished(oldHolder);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+                newHolder.itemView.setAlpha(1f);
+            }
+        });
+
+        ObjectAnimator newObjectAnimator = ObjectAnimator.ofFloat(newHolder.itemView, View.ALPHA, 0, 1f);
+        newObjectAnimator.setDuration(HALF_ANIMATION_DURATION);
+        newObjectAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                dispatchAnimationFinished(newHolder);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+                newHolder.itemView.setAlpha(1f);
+            }
+        });
+
+        AnimatorSet bgAnim = new AnimatorSet();
+        bgAnim.playSequentially(oldObjectAnimator, newObjectAnimator);
+        bgAnim.start();
         return false;
+    }
+
+    @Override
+    public void onAnimationFinished(RecyclerView.ViewHolder viewHolder) {
+        super.onAnimationFinished(viewHolder);
+        viewHolder.itemView.setAlpha(1f);
     }
 
     @Override
     public void runPendingAnimations() {
-
     }
 
     @Override

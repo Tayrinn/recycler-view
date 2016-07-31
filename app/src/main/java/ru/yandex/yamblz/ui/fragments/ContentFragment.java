@@ -3,7 +3,6 @@ package ru.yandex.yamblz.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -13,12 +12,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LayoutAnimationController;
 
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
 import ru.yandex.yamblz.ui.adapters.FrameItemDecoration;
 import ru.yandex.yamblz.ui.adapters.ListItemAnimator;
+import ru.yandex.yamblz.ui.adapters.ScrollAnimationListener;
 import ru.yandex.yamblz.ui.adapters.TouchHelperCallback;
 
 public class ContentFragment extends BaseFragment {
@@ -26,8 +25,8 @@ public class ContentFragment extends BaseFragment {
     @BindView(R.id.rv)
     RecyclerView rv;
 
-    GridLayoutManager glm;
-    int spanSize = 12;
+    private GridLayoutManager glm;
+    private int spanSize = 1;
 
     @NonNull
     @Override
@@ -47,14 +46,19 @@ public class ContentFragment extends BaseFragment {
             }
         });
         rv.setLayoutManager(glm);
+        rv.addOnScrollListener(new ScrollAnimationListener());
+
         ContentAdapter adapter = new ContentAdapter();
         adapter.setHasStableIds(true);
+
         ItemTouchHelper.Callback touchCallback = new TouchHelperCallback( adapter );
         ItemTouchHelper touchHelper = new ItemTouchHelper( touchCallback );
-        FrameItemDecoration itemDecoration = new FrameItemDecoration();
         touchHelper.attachToRecyclerView( rv );
-        rv.setAdapter(adapter);
+
+        FrameItemDecoration itemDecoration = new FrameItemDecoration();
         rv.addItemDecoration(itemDecoration);
+
+        rv.setAdapter(adapter);
         rv.setItemAnimator(new ListItemAnimator());
     }
 
