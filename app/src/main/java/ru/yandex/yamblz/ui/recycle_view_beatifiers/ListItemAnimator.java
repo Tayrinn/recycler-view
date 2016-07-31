@@ -1,23 +1,13 @@
-package ru.yandex.yamblz.ui.adapters;
+package ru.yandex.yamblz.ui.recycle_view_beatifiers;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import ru.yandex.yamblz.ui.fragments.ContentAdapter;
 
 /**
  * Created by Volha on 31.07.2016.
@@ -25,7 +15,7 @@ import ru.yandex.yamblz.ui.fragments.ContentAdapter;
 
 public class ListItemAnimator extends SimpleItemAnimator {
 
-    private final int HALF_ANIMATION_DURATION = 500;
+    private static final int HALF_ANIMATION_DURATION = 500;
     @Override
     public boolean animateRemove(RecyclerView.ViewHolder holder) {
         return false;

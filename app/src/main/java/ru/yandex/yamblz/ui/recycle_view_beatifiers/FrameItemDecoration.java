@@ -1,4 +1,4 @@
-package ru.yandex.yamblz.ui.adapters;
+package ru.yandex.yamblz.ui.recycle_view_beatifiers;
 
 
 import android.graphics.Canvas;
@@ -8,11 +8,8 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import ru.yandex.yamblz.R;
 import ru.yandex.yamblz.ui.fragments.ContentAdapter;
 
 /**

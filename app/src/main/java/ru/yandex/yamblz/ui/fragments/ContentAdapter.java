@@ -1,13 +1,10 @@
 package ru.yandex.yamblz.ui.fragments;
 
-import android.animation.Animator;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -16,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 import ru.yandex.yamblz.R;
-import ru.yandex.yamblz.ui.adapters.OnItemDragListener;
+import ru.yandex.yamblz.ui.recycle_view_beatifiers.OnItemDragListener;
 
 public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> implements OnItemDragListener {
 

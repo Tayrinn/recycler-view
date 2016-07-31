@@ -1,4 +1,4 @@
-package ru.yandex.yamblz.ui.adapters;
+package ru.yandex.yamblz.ui.recycle_view_beatifiers;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

@@ -15,6 +15,6 @@
 
     <item
         android:id="@+id/menu4"
-        android:title="4 columns"/>
+        android:title="10 columns"/>
 
 </menu>

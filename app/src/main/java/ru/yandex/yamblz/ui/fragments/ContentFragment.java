@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
-import ru.yandex.yamblz.ui.adapters.FrameItemDecoration;
-import ru.yandex.yamblz.ui.adapters.ListItemAnimator;
-import ru.yandex.yamblz.ui.adapters.ScrollAnimationListener;
-import ru.yandex.yamblz.ui.adapters.TouchHelperCallback;
+import ru.yandex.yamblz.ui.recycle_view_beatifiers.FrameItemDecoration;
+import ru.yandex.yamblz.ui.recycle_view_beatifiers.ListItemAnimator;
+import ru.yandex.yamblz.ui.recycle_view_beatifiers.ScrollAnimationListener;
+import ru.yandex.yamblz.ui.recycle_view_beatifiers.TouchHelperCallback;
 
 public class ContentFragment extends BaseFragment {
 
@@ -38,7 +38,7 @@ public class ContentFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        glm = new GridLayoutManager(getContext(), 12);
+        glm = new GridLayoutManager(getContext(), 30);
         glm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -72,13 +72,13 @@ public class ContentFragment extends BaseFragment {
     public boolean onOptionsItemSelected( MenuItem item ) {
         switch ( item.getItemId() ) {
             case R.id.menu1:
-                spanSize = 12;
+                spanSize = 30;
                 break;
             case R.id.menu2:
-                spanSize = 6;
+                spanSize = 15;
                 break;
             case R.id.menu3:
-                spanSize = 4;
+                spanSize = 10;
                 break;
             case R.id.menu4:
                 spanSize = 3;
