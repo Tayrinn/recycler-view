@@ -3,6 +3,7 @@ package ru.yandex.yamblz.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -17,6 +18,7 @@ import android.view.animation.LayoutAnimationController;
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
 import ru.yandex.yamblz.ui.adapters.FrameItemDecoration;
+import ru.yandex.yamblz.ui.adapters.ListItemAnimator;
 import ru.yandex.yamblz.ui.adapters.TouchHelperCallback;
 
 public class ContentFragment extends BaseFragment {
@@ -53,6 +55,7 @@ public class ContentFragment extends BaseFragment {
         touchHelper.attachToRecyclerView( rv );
         rv.setAdapter(adapter);
         rv.addItemDecoration(itemDecoration);
+        rv.setItemAnimator(new ListItemAnimator());
     }
 
     @Override
