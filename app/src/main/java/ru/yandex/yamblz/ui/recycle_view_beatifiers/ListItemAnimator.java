@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.view.View;
@@ -13,26 +14,17 @@ import android.view.View;
  * Created by Volha on 31.07.2016.
  */
 
-public class ListItemAnimator extends SimpleItemAnimator {
+public class ListItemAnimator extends DefaultItemAnimator {
 
     private static final int HALF_ANIMATION_DURATION = 500;
-    @Override
-    public boolean animateRemove(RecyclerView.ViewHolder holder) {
-        return false;
-    }
-
-    @Override
-    public boolean animateAdd(RecyclerView.ViewHolder holder) {
-        return false;
-    }
-
-    @Override
-    public boolean animateMove(RecyclerView.ViewHolder holder, int fromX, int fromY, int toX, int toY) {
-        return false;
-    }
 
     @Override
     public boolean animateChange(RecyclerView.ViewHolder oldHolder, RecyclerView.ViewHolder newHolder, int fromLeft, int fromTop, int toLeft, int toTop) {
+
+        if ( oldHolder.getAdapterPosition() != newHolder.getAdapterPosition() ) {
+            return super.animateChange(oldHolder, newHolder, fromLeft, fromTop, toLeft, toTop);
+        }
+
         ObjectAnimator oldObjectAnimator = ObjectAnimator.ofFloat(oldHolder.itemView, View.ALPHA, 1, 0f);
         oldObjectAnimator.setDuration(HALF_ANIMATION_DURATION);
         oldObjectAnimator.addListener(new AnimatorListenerAdapter() {
@@ -80,32 +72,7 @@ public class ListItemAnimator extends SimpleItemAnimator {
     }
 
     @Override
-    public void onAnimationFinished(RecyclerView.ViewHolder viewHolder) {
-        super.onAnimationFinished(viewHolder);
-        viewHolder.itemView.setAlpha(1f);
-    }
-
-    @Override
-    public void runPendingAnimations() {
-    }
-
-    @Override
-    public void endAnimation(RecyclerView.ViewHolder item) {
-
-    }
-
-    @Override
-    public void endAnimations() {
-
-    }
-
-    @Override
-    public boolean isRunning() {
-        return false;
-    }
-
-    @Override
     public boolean canReuseUpdatedViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
-        return false;
+        return true;
     }
 }

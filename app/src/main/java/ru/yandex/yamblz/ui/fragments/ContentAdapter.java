@@ -2,6 +2,7 @@ package ru.yandex.yamblz.ui.fragments;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +25,12 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
 
     @Override
     public ContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ContentHolder holder = new ContentHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.content_item, parent, false));
+        final ContentHolder holder = new ContentHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.content_item, parent, false));
         holder.itemView.setOnClickListener(v -> {
             int itemPosition = holder.getAdapterPosition();
             if ( itemPosition != RecyclerView.NO_POSITION ) {
                 colors.set(itemPosition, Color.rgb(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
-                notifyItemChanged(itemPosition);
+                notifyItemRangeChanged(itemPosition, 1);
             }
         });
         return holder;
@@ -47,7 +48,7 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return createColorForPosition(position);
     }
 
     private Integer createColorForPosition(int position) {
@@ -68,18 +69,22 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
     public void onItemMove(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                if ( i >= 0 )
-                    Collections.swap(colors, i, i + 1);
+                Collections.swap(colors, i, i + 1);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
-                if ( i >= -1 )
-                    Collections.swap(colors, i, i - 1);
+                Collections.swap(colors, i, i - 1);
             }
         }
+        notifyItemMoved(fromPosition, toPosition);
+
         movedFromItemPosition = fromPosition;
         movedToItemPosition = toPosition;
-        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return 0;
     }
 
     public static class ContentHolder extends RecyclerView.ViewHolder {
@@ -90,13 +95,6 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentH
         void bind(Integer color) {
             itemView.setBackgroundColor(color);
             ((TextView) itemView).setText("#".concat(Integer.toHexString(color).substring(2)));
-
-//            itemView.setAlpha(0);
-//            itemView.animate()
-//                    .alpha(1f)
-//                    .rotationX(360f)
-//                    .setDuration(300)
-//                    .setListener(null);
         }
     }
 }
